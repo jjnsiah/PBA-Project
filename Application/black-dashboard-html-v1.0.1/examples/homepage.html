@@ -118,11 +118,66 @@
                 <h3 class="card-title"><i class="tim-icons icon-bell-55 text-primary"></i> Face recognition</h3>
                 <p class="text-muted">Introduction to the facial recognition </p>
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-fill btn-primary">Start!</button>
+
+                  <!--upload the picture-->
+                  <body>
+                    <div class="yanzRight">
+                      <input name="evidence" onchange="uploadImg(this,'preview')" type="file"/>
+                      <span class="dui" id="imgOrder_dui" style="display: none;"></span>
+                    </div>
+                    <div id="preview">
+                      <img src="" alt="" id="imghead5" height="200" width="200" />
+                    </div>
+
+                  </body>
+
+                  <script>
+                  function uploadImg(file,imgNum){
+                    var widthImg = 200; //width of the picture
+                    var heightImg = 200; //height
+                    var div = document.getElementById(imgNum);
+                    if (file.files && file.files[0]){
+                      div.innerHTML ='<img id="upImg">'; //
+                      var img = document.getElementById('upImg'); //获得用户上传的图片节点
+                      img.onload = function(){
+                        img.width = widthImg;
+                        img.height = heightImg;
+                      }
+                      var reader = new FileReader(); //判断图片是否加载完毕
+                      reader.onload = function(evt){
+                        if(reader.readyState === 2){ //加载完毕后赋值
+                          img.src = evt.target.result;
+                        }
+                      }
+                      reader.readAsDataURL(file.files[0]);
+                    }
+                  }
+                </script>
+
+
                 </div>
               </div>
               <div class="card-body">
-                <div class="chart-area">
+               <button name="forwardBtn" onclick="move_forward()">start！</button>
+
+                  var up_file = function () {
+                  var formData = new FormData($('#uploadForm')[0]);
+                  $.ajax({
+                    url:"img_result",
+                    type: "POST",
+                    data: formData,
+                    async: true,
+                    cashe: false,
+                    contentType:false,
+                    processData:false,
+                    success:function (returndata) {
+                    alert(returndata)
+                   　  　},
+   　　             error: function (returndata) {
+   　　 　　　       alert("error！")
+
+   　                  　})
+
                 </div>
               </div>
             </div>
