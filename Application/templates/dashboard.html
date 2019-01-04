@@ -24,32 +24,32 @@
   <div class="wrapper">
     <div class="sidebar">
       <!--
-        Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red"
+      Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red"
     -->
 
-    </div>
-    <div class="main-panel">
-      <!-- Navbar -->
-      <nav class="navbar navbar-expand-lg navbar-absolute navbar-transparent">
-        <div class="container-fluid">
-          <div class="navbar-wrapper">
-            <div class="navbar-toggle d-inline">
-              <button type="button" class="navbar-toggler">
-                <span class="navbar-toggler-bar bar1"></span>
-                <span class="navbar-toggler-bar bar2"></span>
-                <span class="navbar-toggler-bar bar3"></span>
-              </button>
-            </div>
-            <a class="navbar-brand" href="javascript:void(0)">Dashboard</a>
+  </div>
+  <div class="main-panel">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-absolute navbar-transparent">
+      <div class="container-fluid">
+        <div class="navbar-wrapper">
+          <div class="navbar-toggle d-inline">
+            <button type="button" class="navbar-toggler">
+              <span class="navbar-toggler-bar bar1"></span>
+              <span class="navbar-toggler-bar bar2"></span>
+              <span class="navbar-toggler-bar bar3"></span>
+            </button>
           </div>
+          <a class="navbar-brand" href="javascript:void(0)">Dashboard</a>
+        </div>
 
-          <div class="collapse navbar-collapse" id="navigation">
-            <ul class="navbar-nav ml-auto">
-              <li class="search-bar input-group">
-                <button class="btn btn-link" id="search-button" data-toggle="modal" data-target="#searchModal"><i class="tim-icons icon-zoom-split"></i>
-                  <span class="d-lg-none d-md-block">Search</span>
-                </button>
-              </li>
+        <div class="collapse navbar-collapse" id="navigation">
+          <ul class="navbar-nav ml-auto">
+            <li class="search-bar input-group">
+              <button class="btn btn-link" id="search-button" data-toggle="modal" data-target="#searchModal"><i class="tim-icons icon-zoom-split"></i>
+                <span class="d-lg-none d-md-block">Search</span>
+              </button>
+            </li>
           </div>
         </div>
       </nav>
@@ -75,8 +75,21 @@
                 <h5 class="card-category">Upload an image of player and let's tell you about them</h5>
               </div>
               <div class="card-body">
-                  <div class="chart-area">
-                  </div>
+                <div class="yanzRight">
+                  <input id="pic" name="evidence" onchange="uploadImg(this,'preview')" type="file"/>
+                  <span class="dui" id="imgOrder_dui" style="display: none;"></span>
+                </div>
+                <div id="preview">
+                  <img src="" alt="" id="imghead5" height="200" width="200" />
+                </div>
+                <div >
+                  <img id="output_pic" >
+
+                </div>
+
+
+                <div class="chart-area">
+                </div>
 
               </div>
             </div>
@@ -88,8 +101,9 @@
                 <h3 class="card-title"><i class="tim-icons icon-money-coins text-info"></i> SALARY PREDICTION </h3>
                 <h6 class="card-category">Predict the salaries of up and coming players</h6>
               </div>
-              <div class="card-body">
+              <div id="output"class="card-body">
                 <div class="chart-area">
+                  <input type="file" id="myFile" class="btn btn-fill btn-primary"></input>
 
                 </div>
               </div>
@@ -110,39 +124,44 @@
           <div class="copyright">
             ©
             <script>
-              document.write(new Date().getFullYear())
+            document.write(new Date().getFullYear())
             </script>
           </div>
         </div>
       </footer>
     </div>
   </div>
-  <div class="fixed-plugin">
+  <div class="fixed-plugin" >
     <div class="dropdown show-dropdown">
       <a href="#" data-toggle="dropdown">
         <i class="fa fa-cog fa-2x"> </i>
       </a>
-      <ul class="dropdown-menu">
-        <li class="header-title"> Sidebar Background</li>
-        <li class="adjustments-line">
-          <a href="javascript:void(0)" class="switch-trigger background-color">
-            <div class="badge-colors text-center">
-              <span class="badge filter badge-primary active" data-color="primary"></span>
-              <span class="badge filter badge-info" data-color="blue"></span>
-              <span class="badge filter badge-success" data-color="green"></span>
-            </div>
-            <div class="clearfix"></div>
-          </a>
-        </li>
-        <li class="adjustments-line text-center color-change">
-          <span class="color-label">LIGHT MODE</span>
-          <span class="badge light-badge mr-2"></span>
-          <span class="badge dark-badge ml-2"></span>
-          <span class="color-label">DARK MODE</span>
-        </li>
-        </li>
-        <li class="header-title">Thank you for 95 shares!</li>
-      </ul>
+      <ul class="dropdown-menu" style="width: 800px; height: 400px">
+        <li class="header-title"> </li>
+        <div class="card ">
+          <div class="card-header">
+            <h4 class="card-title"> Players Details</h4>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table tablesorter " id="mytable">
+              <thead class=" text-primary">
+                <tr>
+                  <th>
+                    Name
+                  </th>
+                  <th>
+                    Predicted Salary
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
   <!--   Core JS Files   -->
@@ -158,122 +177,269 @@
   <!-- Black Dashboard DEMO methods, don't include it in your project! -->
   <script src="../static/assets/demo/demo.js"></script>
   <script>
-    $(document).ready(function() {
-      $().ready(function() {
-        $sidebar = $('.sidebar');
-        $navbar = $('.navbar');
-        $main_panel = $('.main-panel');
 
-        $full_page = $('.full-page');
+  var filename;
+  var img;
+  var imgsrc;
+  var  timer =0;
+  function uploadImg(file,imgNum){
+    var widthImg = 200; //width of the picture
+    var heightImg = 200; //height
+    var div = document.getElementById(imgNum);
+    if (file.files && file.files[0]){
+      div.innerHTML ='<img id="upImg">'; //
+      var img = document.getElementById('upImg'); //获得用户上传的图片节点
 
-        $sidebar_responsive = $('body > .navbar-collapse');
-        sidebar_mini_active = true;
-        white_color = false;
+      img.onload = function(){
+        img.width = widthImg;
+        img.height = heightImg;
+      }
+      var reader = new FileReader(); //判断图片是否加载完毕
+      reader.onload = function(evt){
+        if(reader.readyState === 2){
+          img.src = evt.target.result;
+        }
+      }
+      filename= file.files[0].name;
+      console.log(filename);
 
-        window_width = $(window).width();
-
-        fixed_plugin_open = $('.sidebar .sidebar-wrapper .nav li.active a p').html();
 
 
+      $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: "/facerec",
+        data: JSON.stringify(filename), // convert array to JSON
+        success: function (data) {
 
-        $('.fixed-plugin a').click(function(event) {
-          if ($(this).hasClass('switch-trigger')) {
-            if (event.stopPropagation) {
-              event.stopPropagation();
-            } else if (window.event) {
-              window.event.cancelBubble = true;
-            }
+          console.log("SUCCESS : ", data);
+          imgsrc= "../"+data;
+          console.log(imgsrc);
+
+
+        },
+        error: function (e) {
+
+          console.log("ERROR : ", e);
+        }
+      });
+
+      reader.readAsDataURL(file.files[0]);
+
+    }
+
+
+    document.getElementById("output_pic").setAttribute("src",imgsrc);
+
+
+  }
+
+
+
+
+  var players = new Array();
+  var input = document.getElementById("myFile");
+  var output = document.getElementById("output");
+
+  document.getElementById('myFile').onchange = function(){
+
+    var file = this.files[0];
+    console.log(file);
+
+    var reader = new FileReader();
+    reader.onload = function(progressEvent){
+      var lines = this.result.split('\n');
+      var array={};
+
+
+      for (var i = 1; i < lines.length; i++) {
+        var cells = lines[i].split(",");
+
+        var player = {};
+        player.name = cells[0];
+        player.gs = cells[1];
+        player.mp = cells[2];
+        player.per = cells[3];
+        player.ows = cells[4];
+        player.dws = cells[5];
+        player.obpm = cells[6];
+        player.vorp = cells[7];
+        player.fg = cells[8];
+        player.fga=cells[9];
+        player.p3 = cells[10];
+        player.p3a = cells[11];
+        player.p2 = cells[12];
+        player.p2a = cells[13];
+        player.ft = cells[14];
+        player.fta = cells[15];
+        player.drb = cells[16];
+        player.ast = cells[17];
+        player.stl = cells[18];
+        player.tov = cells[19];
+        player.pts = cells[20];
+
+        players.push(player);
+
+      }
+      console.log(JSON.stringify(players));
+      //  console.log(players[0].name);
+
+      $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: "/regression/results",
+        data: JSON.stringify(players), // convert array to JSON
+        success: function (data) {
+
+          console.log("SUCCESS : ", data);
+          var salary = data.split(",");
+
+          var r = data;
+          var table = document.getElementById("mytable");
+
+          for (var x = 0; x< players.length; x++ ){
+            var row = table.insertRow(1);
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            cell1.innerHTML = ""+ players[x].name;
+            cell2.innerHTML = ""+ salary[x];
           }
-        });
 
-        $('.fixed-plugin .background-color span').click(function() {
-          $(this).siblings().removeClass('active');
-          $(this).addClass('active');
 
-          var new_color = $(this).data('color');
+        },
+        error: function (e) {
 
-          if ($sidebar.length != 0) {
-            $sidebar.attr('data', new_color);
+          console.log("ERROR : ", e);
+
+
+        }
+      });
+
+
+    };
+    reader.readAsText(file);
+  };
+
+
+
+
+
+  $(document).ready(function() {
+    $().ready(function() {
+      $sidebar = $('.sidebar');
+      $navbar = $('.navbar');
+      $main_panel = $('.main-panel');
+
+      $full_page = $('.full-page');
+
+      $sidebar_responsive = $('body > .navbar-collapse');
+      sidebar_mini_active = true;
+      white_color = false;
+
+      window_width = $(window).width();
+
+      fixed_plugin_open = $('.sidebar .sidebar-wrapper .nav li.active a p').html();
+
+
+
+      $('.fixed-plugin a').click(function(event) {
+        if ($(this).hasClass('switch-trigger')) {
+          if (event.stopPropagation) {
+            event.stopPropagation();
+          } else if (window.event) {
+            window.event.cancelBubble = true;
           }
+        }
+      });
 
-          if ($main_panel.length != 0) {
-            $main_panel.attr('data', new_color);
-          }
+      $('.fixed-plugin .background-color span').click(function() {
+        $(this).siblings().removeClass('active');
+        $(this).addClass('active');
 
-          if ($full_page.length != 0) {
-            $full_page.attr('filter-color', new_color);
-          }
+        var new_color = $(this).data('color');
 
-          if ($sidebar_responsive.length != 0) {
-            $sidebar_responsive.attr('data', new_color);
-          }
-        });
+        if ($sidebar.length != 0) {
+          $sidebar.attr('data', new_color);
+        }
 
-        $('.switch-sidebar-mini input').on("switchChange.bootstrapSwitch", function() {
-          var $btn = $(this);
+        if ($main_panel.length != 0) {
+          $main_panel.attr('data', new_color);
+        }
 
-          if (sidebar_mini_active == true) {
-            $('body').removeClass('sidebar-mini');
-            sidebar_mini_active = false;
-            blackDashboard.showSidebarMessage('Sidebar mini deactivated...');
-          } else {
-            $('body').addClass('sidebar-mini');
-            sidebar_mini_active = true;
-            blackDashboard.showSidebarMessage('Sidebar mini activated...');
-          }
+        if ($full_page.length != 0) {
+          $full_page.attr('filter-color', new_color);
+        }
 
-          // we simulate the window Resize so the charts will get updated in realtime.
-          var simulateWindowResize = setInterval(function() {
-            window.dispatchEvent(new Event('resize'));
-          }, 180);
+        if ($sidebar_responsive.length != 0) {
+          $sidebar_responsive.attr('data', new_color);
+        }
+      });
 
-          // we stop the simulation of Window Resize after the animations are completed
+      $('.switch-sidebar-mini input').on("switchChange.bootstrapSwitch", function() {
+        var $btn = $(this);
+
+        if (sidebar_mini_active == true) {
+          $('body').removeClass('sidebar-mini');
+          sidebar_mini_active = false;
+          blackDashboard.showSidebarMessage('Sidebar mini deactivated...');
+        } else {
+          $('body').addClass('sidebar-mini');
+          sidebar_mini_active = true;
+          blackDashboard.showSidebarMessage('Sidebar mini activated...');
+        }
+
+        // we simulate the window Resize so the charts will get updated in realtime.
+        var simulateWindowResize = setInterval(function() {
+          window.dispatchEvent(new Event('resize'));
+        }, 180);
+
+        // we stop the simulation of Window Resize after the animations are completed
+        setTimeout(function() {
+          clearInterval(simulateWindowResize);
+        }, 1000);
+      });
+
+      $('.switch-change-color input').on("switchChange.bootstrapSwitch", function() {
+        var $btn = $(this);
+
+        if (white_color == true) {
+
+          $('body').addClass('change-background');
           setTimeout(function() {
-            clearInterval(simulateWindowResize);
-          }, 1000);
-        });
+            $('body').removeClass('change-background');
+            $('body').removeClass('white-content');
+          }, 900);
+          white_color = false;
+        } else {
 
-        $('.switch-change-color input').on("switchChange.bootstrapSwitch", function() {
-          var $btn = $(this);
+          $('body').addClass('change-background');
+          setTimeout(function() {
+            $('body').removeClass('change-background');
+            $('body').addClass('white-content');
+          }, 900);
 
-          if (white_color == true) {
-
-            $('body').addClass('change-background');
-            setTimeout(function() {
-              $('body').removeClass('change-background');
-              $('body').removeClass('white-content');
-            }, 900);
-            white_color = false;
-          } else {
-
-            $('body').addClass('change-background');
-            setTimeout(function() {
-              $('body').removeClass('change-background');
-              $('body').addClass('white-content');
-            }, 900);
-
-            white_color = true;
-          }
+          white_color = true;
+        }
 
 
-        });
+      });
 
-        $('.light-badge').click(function() {
-          $('body').addClass('white-content');
-        });
+      $('.light-badge').click(function() {
+        $('body').addClass('white-content');
+      });
 
-        $('.dark-badge').click(function() {
-          $('body').removeClass('white-content');
-        });
+      $('.dark-badge').click(function() {
+        $('body').removeClass('white-content');
       });
     });
+  });
   </script>
   <script>
-    $(document).ready(function() {
-      // Javascript method's body can be found in assets/js/demos.js
-      demo.initDashboardPageCharts();
+  $(document).ready(function() {
+    // Javascript method's body can be found in assets/js/demos.js
+    demo.initDashboardPageCharts();
 
-    });
+  });
   </script>
 </body>
 
